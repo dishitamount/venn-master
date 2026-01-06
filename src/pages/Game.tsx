@@ -11,6 +11,8 @@ import { Slider } from '@/components/ui/slider';
 import VennCircle from '@/components/VennCircle';
 import { DraggableItem } from '@/components/DraggableItem';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { SoundToggle } from '@/components/SoundToggle';
+import { soundManager } from '@/lib/soundManager';
 
 interface CircleState {
   visible: boolean;
@@ -58,6 +60,13 @@ const Game = () => {
       return;
     }
   }, [player, sessionId, navigate]);
+
+  // Play game music based on difficulty
+  useEffect(() => {
+    if (difficulty) {
+      soundManager.playGameMusic(difficulty as 'junior' | 'senior');
+    }
+  }, [difficulty]);
 
   // Load level from backend
   useEffect(() => {
@@ -272,6 +281,7 @@ const Game = () => {
             </span>
           </div>
           <ThemeToggle />
+          <SoundToggle />
         </div>
       </motion.div>
 

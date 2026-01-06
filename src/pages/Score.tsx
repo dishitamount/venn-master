@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { useGame } from '@/contexts/GameContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { SoundToggle } from '@/components/SoundToggle';
+import { soundManager } from '@/lib/soundManager';
 import { Trophy, Medal, RotateCcw, Crown, Star } from 'lucide-react';
 
 const Score = () => {
@@ -13,12 +15,14 @@ const Score = () => {
   // @ts-ignore
   const { player, score, leaderboard, resetGame, setPlayer, fetchLeaderboard } = useGame();
 
-  // Fetch latest leaderboard on mount
+  // Fetch latest leaderboard on mount and play background music
   useEffect(() => {
     fetchLeaderboard();
+    soundManager.playBackgroundMusic();
   }, [fetchLeaderboard]);
 
   const handlePlayAgain = () => {
+    soundManager.playSound('button-click');
     setPlayer(null);
     resetGame();
     navigate('/');
@@ -45,8 +49,9 @@ const Score = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden py-8 px-4">
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50 flex gap-2">
         <ThemeToggle />
+        <SoundToggle />
       </div>
       
       {/* Background */}

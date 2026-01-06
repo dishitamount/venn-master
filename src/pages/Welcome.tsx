@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { useGame } from '@/contexts/GameContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { SoundToggle } from '@/components/SoundToggle';
+import { soundManager } from '@/lib/soundManager';
 import { CircleDot, Sparkles } from 'lucide-react';
 
 const Welcome = () => {
@@ -16,7 +18,13 @@ const Welcome = () => {
   const { setPlayer, resetGame, startNewGame } = useGame();
   const { theme } = useTheme();
 
+  // Play background music when page loads
+  useEffect(() => {
+    soundManager.playBackgroundMusic();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
+    soundManager.playSound('button-click');
     e.preventDefault();
     if (name.trim() && className.trim()) {
       const classNumber = parseInt(className);
@@ -40,8 +48,9 @@ const Welcome = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50 flex gap-2">
         <ThemeToggle />
+        <SoundToggle />
       </div>
       
       {/* Background effects */}

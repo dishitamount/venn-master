@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { SoundToggle } from '@/components/SoundToggle';
+import { soundManager } from '@/lib/soundManager';
 import { 
   Circle, 
   Move, 
@@ -50,8 +52,9 @@ const Rules = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden py-8 px-4">
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50 flex gap-2">
         <ThemeToggle />
+        <SoundToggle />
       </div>
       
       {/* Background effects */}
@@ -127,7 +130,10 @@ const Rules = () => {
             transition={{ delay: 1.2 }}
           >
             <Button
-              onClick={() => navigate('/game')}
+              onClick={() => {
+                soundManager.playSound('button-click');
+                navigate('/game');
+              }}
               variant={theme === 'dark' ? 'neon' : 'default'}
               size="xl"
               className="w-full"
