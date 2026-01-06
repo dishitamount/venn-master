@@ -178,6 +178,7 @@ const Game = () => {
   const checkAnswers = async () => {
     if (!sessionId) return;
     
+    soundManager.playSound('button-click');
     setIsChecking(true);
     
     // Build user answers mapping
@@ -223,16 +224,19 @@ const Game = () => {
   };
 
   const handleNextLevel = () => {
+    soundManager.playSound('button-click');
     setCurrentLevel(currentLevel + 1);
     setShowResult(null);
     setIsChecking(false);
   };
 
   const handleGameOver = () => {
+    soundManager.playSound('button-click');
     navigate('/score');
   };
 
   const handleRetry = () => {
+    soundManager.playSound('button-click');
     resetGame();
     navigate('/');
   };

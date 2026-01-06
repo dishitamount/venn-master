@@ -13,7 +13,7 @@ export const SoundToggle = () => {
   return (
     <button
       onClick={toggleSound}
-      className="fixed top-4 right-4 z-50 p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+      className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
       aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
     >
       {isMuted ? (
