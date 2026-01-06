@@ -15,20 +15,10 @@ const Score = () => {
   // @ts-ignore
   const { player, score, leaderboard, resetGame, setPlayer, fetchLeaderboard } = useGame();
 
-  // Fetch latest leaderboard on mount and play background music
+  // Fetch latest leaderboard on mount
+  // Music continues from previous page (mobile-friendly)
   useEffect(() => {
     fetchLeaderboard();
-    soundManager.playBackgroundMusic();
-    
-    // Play sounds only once on mount
-    soundManager.playSound('leaderboard');
-    
-    // Play points added sound with delay
-    const timer = setTimeout(() => {
-      soundManager.playSound('points');
-    }, 1000);
-    
-    return () => clearTimeout(timer);
   }, []); // Empty dependency array - run only once on mount
 
   const handlePlayAgain = () => {

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useGame } from '@/contexts/GameContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { SoundToggle } from '@/components/SoundToggle';
 import { soundManager } from '@/lib/soundManager';
@@ -34,6 +35,8 @@ const rules = [
 const Rules = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  // @ts-ignore
+  const { difficulty } = useGame();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -132,6 +135,10 @@ const Rules = () => {
             <Button
               onClick={() => {
                 soundManager.playSound('button-click');
+                // Start game music on button click (mobile-friendly)
+                if (difficulty) {
+                  soundManager.playGameMusic(difficulty as 'junior' | 'senior');
+                }
                 navigate('/game');
               }}
               variant={theme === 'dark' ? 'neon' : 'default'}

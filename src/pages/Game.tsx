@@ -61,12 +61,8 @@ const Game = () => {
     }
   }, [player, sessionId, navigate]);
 
-  // Play game music based on difficulty
-  useEffect(() => {
-    if (difficulty) {
-      soundManager.playGameMusic(difficulty as 'junior' | 'senior');
-    }
-  }, [difficulty]);
+  // Game music will be started by user interaction (button clicks)
+  // to comply with mobile browser autoplay policies
 
   // Load level from backend
   useEffect(() => {
@@ -232,6 +228,12 @@ const Game = () => {
 
   const handleGameOver = () => {
     soundManager.playSound('button-click');
+    // Switch to background music and play leaderboard sounds
+    soundManager.playBackgroundMusic();
+    soundManager.playSound('leaderboard');
+    setTimeout(() => {
+      soundManager.playSound('points');
+    }, 1000);
     navigate('/score');
   };
 
