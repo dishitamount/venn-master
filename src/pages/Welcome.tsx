@@ -19,8 +19,26 @@ const Welcome = () => {
   const { theme } = useTheme();
 
   // Play background music when page loads
+  // Note: On mobile, audio might not play until user interacts with the page
   useEffect(() => {
+    // Try to play immediately (works on desktop)
     soundManager.playBackgroundMusic();
+    
+    // Also try on first user interaction (for mobile)
+    const enableAudioOnInteraction = () => {
+      soundManager.playBackgroundMusic();
+      // Remove listener after first interaction
+      document.removeEventListener('touchstart', enableAudioOnInteraction);
+      document.removeEventListener('click', enableAudioOnInteraction);
+    };
+    
+    document.addEventListener('touchstart', enableAudioOnInteraction, { once: true });
+    document.addEventListener('click', enableAudioOnInteraction, { once: true });
+    
+    return () => {
+      document.removeEventListener('touchstart', enableAudioOnInteraction);
+      document.removeEventListener('click', enableAudioOnInteraction);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,7 +66,7 @@ const Welcome = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
+      <div className="fixed top-4 right-4 z-50 flex gap-3 items-center">
         <ThemeToggle />
         <SoundToggle />
       </div>

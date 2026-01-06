@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { soundManager } from '@/lib/soundManager';
 
@@ -13,13 +13,14 @@ export const SoundToggle = () => {
   return (
     <button
       onClick={toggleSound}
-      className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+      className="p-2.5 sm:p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors touch-manipulation"
       aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
+      type="button"
     >
       {isMuted ? (
-        <VolumeX className="w-6 h-6 text-primary" />
+        <VolumeX className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
       ) : (
-        <Volume2 className="w-6 h-6 text-primary" />
+        <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
       )}
     </button>
   );

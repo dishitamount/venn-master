@@ -52,7 +52,7 @@ const Rules = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden py-8 px-4">
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
+      <div className="fixed top-4 right-4 z-50 flex gap-3 items-center">
         <ThemeToggle />
         <SoundToggle />
       </div>
