@@ -42,8 +42,14 @@ const Welcome = () => {
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    soundManager.playSound('button-click');
     e.preventDefault();
+    
+    // Initialize audio on first click (unlocks audio on mobile)
+    soundManager.initAudio();
+    
+    // Now play sounds
+    soundManager.playBackgroundMusic();
+    soundManager.playSound('button-click');
     if (name.trim() && className.trim()) {
       const classNumber = parseInt(className);
       

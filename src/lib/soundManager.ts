@@ -146,6 +146,13 @@ class SoundManager {
   getMuted() {
     return this.isMuted;
   }
+
+  // Public method to initialize audio on first user interaction (for mobile)
+  initAudio() {
+    // Pre-initialize audio objects on first click to unlock audio on mobile
+    this.initBackgroundMusic();
+    this.initGameMusic();
+  }
 }
 
 // Export singleton instance
