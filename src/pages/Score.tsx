@@ -19,6 +19,8 @@ const Score = () => {
   useEffect(() => {
     fetchLeaderboard();
     soundManager.playBackgroundMusic();
+    
+    // Play sounds only once on mount
     soundManager.playSound('leaderboard');
     
     // Play points added sound with delay
@@ -27,7 +29,7 @@ const Score = () => {
     }, 1000);
     
     return () => clearTimeout(timer);
-  }, [fetchLeaderboard]);
+  }, []); // Empty dependency array - run only once on mount
 
   const handlePlayAgain = () => {
     soundManager.playSound('button-click');
