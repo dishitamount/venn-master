@@ -3,47 +3,84 @@ class SoundManager {
   private gameMusic: HTMLAudioElement | null = null;
   private currentMusic: HTMLAudioElement | null = null;
   private isMuted: boolean = false;
+  private currentGameMusicType: 'junior' | 'senior' | null = null;
 
   constructor() {
     // Load mute preference from localStorage
     const saved = localStorage.getItem('soundMuted');
     this.isMuted = saved === 'true';
-    
-    // Preload audio files
-    this.backgroundMusic = new Audio('/background-music.mp3');
-    this.backgroundMusic.loop = true;
-    this.backgroundMusic.volume = 0.3;
-    
-    this.gameMusic = new Audio();
-    this.gameMusic.loop = true;
-    this.gameMusic.volume = 0.4;
+  }
+
+  private initBackgroundMusic() {
+    if (!this.backgroundMusic) {
+      this.backgroundMusic = new Audio('/background-music.mp3');
+      this.backgroundMusic.loop = true;
+      this.backgroundMusic.volume = 0.3;
+      this.backgroundMusic.preload = 'auto';
+    }
+    return this.backgroundMusic;
+  }
+
+  private initGameMusic() {
+    if (!this.gameMusic) {
+      this.gameMusic = new Audio();
+      this.gameMusic.loop = true;
+      this.gameMusic.volume = 0.4;
+      this.gameMusic.preload = 'auto';
+    }
+    return this.gameMusic;
   }
 
   playBackgroundMusic() {
     if (this.isMuted) return;
     
-    // Stop any currently playing music
-    this.stopAll();
-    
-    if (this.backgroundMusic) {
-      this.backgroundMusic.play().catch(err => console.log('Audio play failed:', err));
-      this.currentMusic = this.backgroundMusic;
+    // Stop game music if playing
+    if (this.gameMusic && !this.gameMusic.paused) {
+      this.gameMusic.pause();
+      this.gameMusic.currentTime = 0;
     }
+    
+    const music = this.initBackgroundMusic();
+    
+    // Only restart if not already playing
+    if (music.paused || music.ended) {
+      music.currentTime = 0;
+      music.play().catch(err => console.log('Background music play failed:', err));
+    }
+    
+    this.currentMusic = music;
+    this.currentGameMusicType = null;
   }
 
   playGameMusic(difficulty: 'junior' | 'senior') {
     if (this.isMuted) return;
     
-    // Stop any currently playing music
-    this.stopAll();
+    // If same music is already playing, don't restart
+    if (this.currentGameMusicType === difficulty && this.gameMusic && !this.gameMusic.paused) {
+      return;
+    }
+    
+    // Stop background music if playing
+    if (this.backgroundMusic && !this.backgroundMusic.paused) {
+      this.backgroundMusic.pause();
+    }
     
     const musicFile = difficulty === 'junior' ? '/junior-music.mp3' : '/senior-music.mp3';
+    const music = this.initGameMusic();
     
-    if (this.gameMusic) {
-      this.gameMusic.src = musicFile;
-      this.gameMusic.play().catch(err => console.log('Audio play failed:', err));
-      this.currentMusic = this.gameMusic;
+    // Only change source if different
+    if (music.src !== location.origin + musicFile) {
+      music.src = musicFile;
     }
+    
+    // Play the music
+    if (music.paused || music.ended) {
+      music.currentTime = 0;
+      music.play().catch(err => console.log('Game music play failed:', err));
+    }
+    
+    this.currentMusic = music;
+    this.currentGameMusicType = difficulty;
   }
 
   playSound(soundName: string) {
@@ -63,8 +100,15 @@ class SoundManager {
     const soundFile = soundMap[soundName];
     if (soundFile) {
       const audio = new Audio(soundFile);
-      audio.volume = 0.5;
-      audio.play().catch(err => console.log('Sound play failed:', err));
+      audio.volume = 0.6;
+      audio.preload = 'auto';
+      audio.play().catch(err => {
+        console.log(`Sound '${soundName}' play failed:`, err);
+        // Try again after a brief delay
+        setTimeout(() => {
+          audio.play().catch(e => console.log('Retry failed:', e));
+        }, 100);
+      });
     }
   }
 
@@ -85,14 +129,14 @@ class SoundManager {
     localStorage.setItem('soundMuted', this.isMuted.toString());
     
     if (this.isMuted) {
-      // Stop all sounds
-      if (this.currentMusic) {
+      // Pause all sounds
+      if (this.currentMusic && !this.currentMusic.paused) {
         this.currentMusic.pause();
       }
     } else {
       // Resume current music if any
-      if (this.currentMusic) {
-        this.currentMusic.play().catch(err => console.log('Audio play failed:', err));
+      if (this.currentMusic && this.currentMusic.paused) {
+        this.currentMusic.play().catch(err => console.log('Audio resume failed:', err));
       }
     }
     
