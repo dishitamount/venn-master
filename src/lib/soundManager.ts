@@ -51,12 +51,13 @@ class SoundManager {
     
     const soundMap: Record<string, string> = {
       'button-click': '/button-click.mp3',
-      // Placeholders for sounds to be added later
-      'correct': '', 
-      'wrong': '',
-      'level-up': '',
-      'game-over': '',
-      'drop': '',
+      'circle-pop': '/circle-pop.mp3',
+      'correct': '/correct-answer.mp3',
+      'wrong': '/wrong-answer.mp3',
+      'level-up': '/level-up.mp3',
+      'drag': '/drag-circle.mp3',
+      'leaderboard': '/leaderboard-appears.mp3',
+      'points': '/points-added.mp3',
     };
 
     const soundFile = soundMap[soundName];

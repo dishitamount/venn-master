@@ -122,6 +122,7 @@ const Game = () => {
   }
 
   const toggleCircle = (circle: 'A' | 'B') => {
+    soundManager.playSound('circle-pop');
     setCircles(prev => ({
       ...prev,
       [circle]: { ...prev[circle], visible: !prev[circle].visible }
@@ -199,6 +200,8 @@ const Game = () => {
       setResultMessage(result.explanation);
 
       if (result.correct) {
+        soundManager.playSound('correct');
+        soundManager.playSound('level-up');
         confetti({
           particleCount: 100,
           spread: 70,
@@ -207,6 +210,7 @@ const Game = () => {
         setScore(result.total_score);
         setShowResult('correct');
       } else {
+        soundManager.playSound('wrong');
         setShowResult('wrong');
         // Game over - refresh leaderboard
         await fetchLeaderboard();

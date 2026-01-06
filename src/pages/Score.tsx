@@ -19,6 +19,14 @@ const Score = () => {
   useEffect(() => {
     fetchLeaderboard();
     soundManager.playBackgroundMusic();
+    soundManager.playSound('leaderboard');
+    
+    // Play points added sound with delay
+    const timer = setTimeout(() => {
+      soundManager.playSound('points');
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, [fetchLeaderboard]);
 
   const handlePlayAgain = () => {
